@@ -24,7 +24,22 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
-  
+
+    const taskCollection = client.db('taskManagementDB').collection('createTasks')
+
+    app.post('/createTask',async(req,res)=>{
+        const task = req.body;
+        const result = await taskCollection.insertOne(task)
+        res.send(result)       
+    })
+    app.get('/createTast/:email',async(req,res)=>{
+        const email = req.params.email;
+        const query = {email: email}
+        const result = await taskCollection.find(query).toArray()
+        res.send(result)
+    })
+
+
     // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
