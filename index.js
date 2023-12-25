@@ -35,7 +35,9 @@ async function run() {
     app.get('/toDoList/:email', async (req, res) => {
       const email = req.params.email;
       const query = { email: email }
+      console.log(query)
       const result = await taskCollection.find(query).toArray()
+      console.log(result)
       res.send(result)
     })
     app.get('/updatetask/:id', async (req, res) => {
@@ -49,9 +51,7 @@ async function run() {
     app.delete("/taskDelete/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
-      console.log(query)
       const result = await taskCollection.deleteOne(query)
-      console.log(result)
       res.send(result)
     })
 
@@ -69,6 +69,18 @@ async function run() {
         }
       }
       const result = await taskCollection.updateOne(query, updatedStatus)
+      res.send(result)
+    })
+    app.patch("/task/:id",async(req,res)=>{
+      const {status} = req.body;
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const updatedStatus = {
+        $set:{
+          status: status
+        }
+      }
+      const result = await taskCollection.updateOne(query,updatedStatus)
       res.send(result)
     })
 
